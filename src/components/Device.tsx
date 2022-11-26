@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Box,
   IconButton,
@@ -7,7 +8,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@mui/material";
 
 import { Edit, Delete } from "@mui/icons-material";
@@ -17,11 +18,11 @@ import { Device as DeviceType } from "../types/device";
 const NormalDevice = ({
   device,
   handleEdit,
-  handleDelete
+  handleDelete,
 }: {
   device: DeviceType;
-  handleEdit: Function;
-  handleDelete: Function;
+  handleEdit: (device: DeviceType) => void;
+  handleDelete: (device: DeviceType) => void;
 }) => {
   return (
     <>
@@ -29,7 +30,7 @@ const NormalDevice = ({
         sx={{
           display: "flex",
           alignItems: "top",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         <Box>
@@ -120,9 +121,9 @@ const NormalDevice = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {device.dataPoints.map((point) => {
+            {device.dataPoints.map((point, index) => {
               return (
-                <TableRow>
+                <TableRow key={index}>
                   <TableCell>{point.description}</TableCell>
                   <TableCell>{point.type}</TableCell>
                   <TableCell>{point.comment}</TableCell>
@@ -139,11 +140,11 @@ const NormalDevice = ({
 const CompactDevice = ({
   device,
   handleEdit,
-  handleDelete
+  handleDelete,
 }: {
   device: DeviceType;
-  handleEdit: Function;
-  handleDelete: Function;
+  handleEdit: (device: DeviceType) => void;
+  handleDelete: (device: DeviceType) => void;
 }) => {
   return (
     <>
@@ -151,7 +152,7 @@ const CompactDevice = ({
         sx={{
           display: "flex",
           alignItems: "top",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
         <Box>
@@ -190,12 +191,12 @@ export const Device = ({
   view,
   device,
   handleEdit,
-  handleDelete
+  handleDelete,
 }: {
   view: "normal" | "compact";
   device: DeviceType;
-  handleEdit: Function;
-  handleDelete: Function;
+  handleEdit: (device: DeviceType) => void;
+  handleDelete: (device: DeviceType) => void;
 }) => {
   return (
     <>

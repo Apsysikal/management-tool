@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Dialog,
@@ -5,22 +6,22 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Formik, Form } from "formik";
-import { EmptyProject } from "../types/project";
+import { EmptyProject, Project } from "../types/project";
 import { FormTextField } from "../components/forms/TextField";
 
 export const ProjectDialog = ({
   open,
   project = { title: "" },
   handleClose,
-  handleSubmit
+  handleSubmit,
 }: {
   open: boolean;
   project?: EmptyProject;
-  handleClose: Function;
-  handleSubmit: Function;
+  handleClose: () => void;
+  handleSubmit: (values: Project | EmptyProject) => void;
 }) => {
   const initialValues = { ...project };
 
@@ -33,7 +34,7 @@ export const ProjectDialog = ({
           handleSubmit(values);
         }}
       >
-        {({ values, handleChange }) => (
+        {() => (
           <>
             <Form style={{ margin: 0, padding: 0 }}>
               <DialogContent>

@@ -1,3 +1,4 @@
+import React from "react";
 import { Add, ChevronRight, Delete, Edit } from "@mui/icons-material";
 import {
   AppBar,
@@ -7,7 +8,7 @@ import {
   IconButton,
   Paper,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -18,16 +19,15 @@ import { generateId } from "../utils";
 
 export const Project = () => {
   const { projectId } = useParams();
-  const [cabinets, addCabinet, updateCabinet, removeCabinet] = useCabinets(
-    projectId
-  );
+  const [cabinets, addCabinet, updateCabinet, removeCabinet] =
+    useCabinets(projectId);
 
   // Dialog
   const [open, setOpen] = useState(false);
   const [cabinet, setCabinet] = useState<Cabinet | EmptyCabinet>({
     projectId: projectId || "",
     name: "",
-    location: ""
+    location: "",
   });
 
   if (!projectId) return null;
@@ -37,7 +37,7 @@ export const Project = () => {
     setCabinet({
       projectId: projectId || "",
       name: "",
-      location: ""
+      location: "",
     });
   };
 
@@ -103,7 +103,7 @@ export const Project = () => {
           sx={{
             position: "absolute",
             bottom: 16,
-            right: 16
+            right: 16,
           }}
         >
           <Add />

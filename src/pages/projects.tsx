@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Box,
@@ -7,7 +7,7 @@ import {
   IconButton,
   Paper,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Add, Edit, Delete, ChevronRight } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -16,10 +16,9 @@ import {
   useProjects,
   useCreateProject,
   useUpdateProject,
-  useDeleteProject
+  useDeleteProject,
 } from "../hooks/useProjects";
 import { Project, EmptyProject } from "../types/project";
-import { generateId } from "../utils";
 
 export const Projects = () => {
   const { data: projects } = useProjects();
@@ -97,7 +96,7 @@ export const Projects = () => {
           sx={{
             position: "absolute",
             bottom: 16,
-            right: 16
+            right: 16,
           }}
         >
           <Add />

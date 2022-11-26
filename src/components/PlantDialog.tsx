@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Dialog,
@@ -5,22 +6,22 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Typography
+  Typography,
 } from "@mui/material";
 import { Formik, Form } from "formik";
 import { FormTextField } from "../components/forms/TextField";
-import { EmptyPlant } from "../types/plant";
+import { EmptyPlant, Plant } from "../types/plant";
 
 export const PlantDialog = ({
   open,
   plant = { cabinetId: "", shortDescription: "", description: "" },
   handleClose,
-  handleSubmit
+  handleSubmit,
 }: {
   open: boolean;
   plant?: EmptyPlant;
-  handleClose: Function;
-  handleSubmit: Function;
+  handleClose: () => void;
+  handleSubmit: (values: Plant | EmptyPlant) => void;
 }) => {
   const initialValues = { ...plant };
 
@@ -33,7 +34,7 @@ export const PlantDialog = ({
           handleSubmit(values);
         }}
       >
-        {({ values, handleChange }) => (
+        {() => (
           <>
             <Form style={{ margin: 0, padding: 0 }}>
               <DialogContent>

@@ -1,3 +1,4 @@
+import React from "react";
 import { Fragment } from "react";
 import { FieldArray, Form, Formik } from "formik";
 import {
@@ -9,7 +10,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Typography
+  Typography,
 } from "@mui/material";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -26,27 +27,27 @@ export const emptyDevice: EmptyDevice = {
   electrical: {
     voltage: 0,
     current: 0,
-    power: 0
+    power: 0,
   },
   dataPoints: [
     {
       type: "",
       description: "",
-      comment: ""
-    }
-  ]
+      comment: "",
+    },
+  ],
 };
 
 export const DeviceDialog = ({
   open,
   device = emptyDevice,
   handleClose,
-  handleSubmit
+  handleSubmit,
 }: {
   open: boolean;
   device: Device | EmptyDevice;
-  handleClose: Function;
-  handleSubmit: Function;
+  handleClose: () => void;
+  handleSubmit: (values: Device | EmptyDevice) => void;
 }) => {
   const initialValues = { ...device };
 
@@ -61,7 +62,7 @@ export const DeviceDialog = ({
           handleSubmit(values);
         }}
       >
-        {({ values, handleChange }) => (
+        {({ values }) => (
           <>
             <Form style={{ margin: 0, padding: 0 }}>
               <DialogContent>
@@ -98,7 +99,7 @@ export const DeviceDialog = ({
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">V</InputAdornment>
-                          )
+                          ),
                         }}
                       />
                     </Grid>
@@ -111,7 +112,7 @@ export const DeviceDialog = ({
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">A</InputAdornment>
-                          )
+                          ),
                         }}
                       />
                     </Grid>
@@ -124,7 +125,7 @@ export const DeviceDialog = ({
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">W</InputAdornment>
-                          )
+                          ),
                         }}
                       />
                     </Grid>
@@ -146,20 +147,20 @@ export const DeviceDialog = ({
                                     options={[
                                       {
                                         value: "Digital Input",
-                                        label: "Digital Input"
+                                        label: "Digital Input",
                                       },
                                       {
                                         value: "Digital Output",
-                                        label: "Digital Output"
+                                        label: "Digital Output",
                                       },
                                       {
                                         value: "Analog Input",
-                                        label: "Analog Input"
+                                        label: "Analog Input",
                                       },
                                       {
                                         value: "Analog Output",
-                                        label: "Analog Output"
-                                      }
+                                        label: "Analog Output",
+                                      },
                                     ]}
                                   />
                                 </Grid>
@@ -206,7 +207,7 @@ export const DeviceDialog = ({
                                 push({
                                   type: "",
                                   description: "",
-                                  comment: ""
+                                  comment: "",
                                 })
                               }
                             >

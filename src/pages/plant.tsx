@@ -1,3 +1,4 @@
+import React from "react";
 import { Add } from "@mui/icons-material";
 import {
   AppBar,
@@ -5,7 +6,7 @@ import {
   CssBaseline,
   Fab,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -20,10 +21,13 @@ export function Plant() {
   const [devices, addDevice, updateDevice, removeDevice] = useDevices(plantId);
   const [expandedView] = useState(true);
   const [open, setOpen] = useState(false);
-  const [dialogDevice, setDialogDevice] = useState({ ...emptyDevice, plantId });
+  const [dialogDevice, setDialogDevice] = useState<DeviceType | EmptyDevice>({
+    ...emptyDevice,
+    plantId: plantId || "",
+  });
 
   const handleDeviceDialogClose = () => {
-    setDialogDevice({ ...emptyDevice, plantId });
+    setDialogDevice({ ...emptyDevice, plantId: plantId || "" });
     setOpen(() => false);
   };
 
@@ -42,7 +46,7 @@ export function Plant() {
   const handleDeviceEdit = (device: DeviceType) => {
     setDialogDevice(() => {
       return {
-        ...device
+        ...device,
       };
     });
     setOpen(() => true);
@@ -61,7 +65,7 @@ export function Plant() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
-        {devices.map((device, index) => {
+        {devices.map((device) => {
           return (
             <Device
               key={device.id}
@@ -85,7 +89,7 @@ export function Plant() {
         sx={{
           position: "fixed",
           bottom: 16,
-          right: 16
+          right: 16,
         }}
       >
         <Add />

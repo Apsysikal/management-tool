@@ -1,10 +1,11 @@
+import React from "react";
 import { useField } from "formik";
 import {
   FormControl,
   InputLabel,
   Select,
   MenuItem,
-  SelectProps
+  SelectProps,
 } from "@mui/material";
 
 type FormSelectFieldProps = {
@@ -24,15 +25,13 @@ export const FormSelectField = ({
   return (
     <FormControl fullWidth variant="standard" margin="dense">
       <InputLabel id={labelId}>Type</InputLabel>
-      <Select
-        labelId={labelId}
-        name={name}
-        error={validationError}
-        {...field}
-        {...props}
-      >
-        {options.map((item) => {
-          return <MenuItem value={item.value}>{item.label}</MenuItem>;
+      <Select labelId={labelId} error={validationError} {...field} {...props}>
+        {options.map((item, index) => {
+          return (
+            <MenuItem key={index} value={item.value}>
+              {item.label}
+            </MenuItem>
+          );
         })}
       </Select>
     </FormControl>

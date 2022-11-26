@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useAxios } from "./useAxios";
 import { Project } from "../types/project";
+import { transformDataBasedIdField } from "../utils";
 
 const projectKeys = {
   all: ["projects"] as const,
-  detail: (id: string) => [projectKeys.all, "detail", id] as const
+  detail: (id: string) => [projectKeys.all, "detail", id] as const,
 };
 
 export const useProjects = () => {
@@ -21,7 +22,7 @@ export const useProjects = () => {
 
   return useQuery({
     queryKey: projectKeys.all,
-    queryFn: getProjects
+    queryFn: getProjects,
   });
 };
 
@@ -30,8 +31,8 @@ export const useProjectDetails = (id: string) => {
 
   function getProjectById(id: string) {
     return axios.instance
-      .get<Project | {}>(`/project/${id}`)
-      .then(({ data }) => data)
+      .get<Project>(`/project/${id}`)
+      .then(({ data }) => transformDataBasedIdField(data))
       .catch((error) => {
         throw error;
       });
@@ -39,7 +40,7 @@ export const useProjectDetails = (id: string) => {
 
   return useQuery({
     queryKey: projectKeys.detail(id),
-    queryFn: () => getProjectById(id)
+    queryFn: () => getProjectById(id),
   });
 };
 
@@ -63,7 +64,7 @@ export const useCreateProject = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(projectKeys.all);
-    }
+    },
   });
 };
 
@@ -84,7 +85,7 @@ export const useUpdateProject = () => {
     mutationFn: (project: Project) => modifyProject(project),
     onSuccess: () => {
       queryClient.invalidateQueries(projectKeys.all);
-    }
+    },
   });
 };
 
@@ -105,6 +106,6 @@ export const useDeleteProject = () => {
     mutationFn: (project: Project) => deleteProject(project),
     onSuccess: () => {
       queryClient.invalidateQueries(projectKeys.all);
-    }
+    },
   });
 };

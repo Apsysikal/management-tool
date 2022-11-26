@@ -1,3 +1,4 @@
+import React from "react";
 import { Add, ChevronRight, Delete, Edit } from "@mui/icons-material";
 import {
   AppBar,
@@ -7,7 +8,7 @@ import {
   IconButton,
   Paper,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -25,7 +26,7 @@ export const Cabinet = () => {
   const [plant, setPlant] = useState<Plant | EmptyPlant>({
     cabinetId: cabinetId || "",
     shortDescription: "",
-    description: ""
+    description: "",
   });
 
   if (!cabinetId) return null;
@@ -35,7 +36,7 @@ export const Cabinet = () => {
     setPlant({
       cabinetId: cabinetId || "",
       shortDescription: "",
-      description: ""
+      description: "",
     });
   };
 
@@ -101,7 +102,7 @@ export const Cabinet = () => {
           sx={{
             position: "absolute",
             bottom: 16,
-            right: 16
+            right: 16,
           }}
         >
           <Add />
