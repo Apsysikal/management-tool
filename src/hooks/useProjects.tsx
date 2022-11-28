@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useAxios } from "./useAxios";
-import { Project, ProjectResponse } from "../types/project";
 import { transformBackendObject } from "../utils";
+import { getProjects } from "../api/project";
+
+// Types
+import { Project, ProjectResponse } from "../types/project";
 
 const projectKeys = {
   all: ["projects"] as const,
@@ -11,18 +14,10 @@ const projectKeys = {
 export const useProjects = () => {
   const axios = useAxios();
 
-  function getProjects() {
-    return axios.instance
-      .get<ProjectResponse[]>("/project")
-      .then(({ data }) => transformBackendObject(data) as Project[])
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useQuery({
     queryKey: projectKeys.all,
-    queryFn: getProjects,
+    queryFn: (queryKey) =>
+      getProjects({ queryKey: projectKeys.all, axios: axios.instance }),
   });
 };
 
