@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { AxiosProvider } from "./contexts/axios";
 
 import App from "./App";
@@ -16,6 +17,7 @@ const queryClient = new QueryClient();
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools />
       <AxiosProvider>
         <Router>
           <CssBaseline />

@@ -11,15 +11,24 @@ import {
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { DeviceDialog, emptyDevice } from "../components/DeviceDialog";
-import { useDevices } from "../hooks/useDevices";
+import {
+  useCreateDevice,
+  useDeleteDevice,
+  useDevices,
+  useUpdateDevice,
+} from "../hooks/useDevices";
 import { Device as DeviceType, EmptyDevice } from "../types/device";
 import { Device } from "../components/Device";
-import { generateId } from "../utils";
 
 export function Plant() {
   const { plantId } = useParams();
-  const [devices, addDevice, updateDevice, removeDevice] = useDevices(plantId);
+  const { data: devices } = useDevices();
+  const createDevice = useCreateDevice();
+  const updateDevice = useUpdateDevice();
+  const deleteDevice = useDeleteDevice();
   const [expandedView] = useState(true);
+
+  // Dialog state
   const [open, setOpen] = useState(false);
   const [dialogDevice, setDialogDevice] = useState<DeviceType | EmptyDevice>({
     ...emptyDevice,
@@ -35,9 +44,9 @@ export function Plant() {
     console.debug(device);
 
     if ("id" in device) {
-      updateDevice(device);
+      updateDevice.mutate(device);
     } else {
-      addDevice({ ...device, id: generateId() });
+      createDevice.mutate(device);
     }
 
     handleDeviceDialogClose();
@@ -53,7 +62,7 @@ export function Plant() {
   };
 
   const handleDeviceDelete = (device: DeviceType) => {
-    removeDevice(device);
+    deleteDevice.mutate(device);
   };
 
   return (
@@ -65,17 +74,19 @@ export function Plant() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
-        {devices.map((device) => {
-          return (
-            <Device
-              key={device.id}
-              view={expandedView ? "normal" : "compact"}
-              device={device}
-              handleEdit={handleDeviceEdit}
-              handleDelete={handleDeviceDelete}
-            />
-          );
-        })}
+        {devices
+          ?.filter(({ plantId: id }) => id === plantId)
+          .map((device) => {
+            return (
+              <Device
+                key={device.id}
+                view={expandedView ? "normal" : "compact"}
+                device={device}
+                handleEdit={handleDeviceEdit}
+                handleDelete={handleDeviceDelete}
+              />
+            );
+          })}
       </Container>
       <DeviceDialog
         open={open}

@@ -13,14 +13,20 @@ import {
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CabinetDialog } from "../components/CabinetDialog";
-import { useCabinets } from "../hooks/useCabinets";
+import {
+  useCabinets,
+  useCreateCabinet,
+  useUpdateCabinet,
+  useDeleteCabinet,
+} from "../hooks/useCabinets";
 import { Cabinet, EmptyCabinet } from "../types/cabinet";
-import { generateId } from "../utils";
 
 export const Project = () => {
   const { projectId } = useParams();
-  const [cabinets, addCabinet, updateCabinet, removeCabinet] =
-    useCabinets(projectId);
+  const { data: cabinets } = useCabinets();
+  const createCabinet = useCreateCabinet();
+  const updateCabinet = useUpdateCabinet();
+  const deleteCabinet = useDeleteCabinet();
 
   // Dialog
   const [open, setOpen] = useState(false);
@@ -43,9 +49,9 @@ export const Project = () => {
 
   const handleSubmit = (values: Cabinet | EmptyCabinet) => {
     if ("id" in values) {
-      updateCabinet(values);
+      updateCabinet.mutate(values);
     } else {
-      addCabinet({ ...values, id: generateId() });
+      createCabinet.mutate(values);
     }
 
     handleClose();
@@ -57,7 +63,7 @@ export const Project = () => {
   };
 
   const handleDelete = (values: Cabinet) => {
-    removeCabinet(values);
+    deleteCabinet.mutate(values);
   };
 
   return (
@@ -68,7 +74,7 @@ export const Project = () => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
-        {cabinets.map((cabinet) => {
+        {cabinets?.map((cabinet) => {
           return (
             <Paper key={cabinet.id} sx={{ m: 1, p: 1 }}>
               <Box display="flex" justifyContent="space-between">

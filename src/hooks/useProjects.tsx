@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useAxios } from "./useAxios";
-import { Project } from "../types/project";
-import { transformDataBasedIdField } from "../utils";
+import { Project, ProjectResponse } from "../types/project";
+import { transformBackendObject } from "../utils";
 
 const projectKeys = {
   all: ["projects"] as const,
@@ -13,8 +13,8 @@ export const useProjects = () => {
 
   function getProjects() {
     return axios.instance
-      .get<Project[]>("/project")
-      .then(({ data }) => data)
+      .get<ProjectResponse[]>("/project")
+      .then(({ data }) => transformBackendObject(data) as Project[])
       .catch((error) => {
         throw error;
       });
@@ -31,8 +31,8 @@ export const useProjectDetails = (id: string) => {
 
   function getProjectById(id: string) {
     return axios.instance
-      .get<Project>(`/project/${id}`)
-      .then(({ data }) => transformDataBasedIdField(data))
+      .get<ProjectResponse>(`/project/${id}`)
+      .then(({ data }) => transformBackendObject(data) as Project)
       .catch((error) => {
         throw error;
       });
@@ -50,8 +50,8 @@ export const useCreateProject = () => {
 
   function createProject(project: Omit<Project, "id">) {
     return axios.instance
-      .post<Project>("/project", project)
-      .then(({ data }) => data)
+      .post<ProjectResponse>("/project", project)
+      .then(({ data }) => transformBackendObject(data) as Project)
       .catch((error) => {
         throw error;
       });
@@ -74,8 +74,8 @@ export const useUpdateProject = () => {
 
   function modifyProject(project: Project) {
     return axios.instance
-      .put<Project>(`/${project.id}`, project)
-      .then(({ data }) => data)
+      .put<ProjectResponse>(`/${project.id}`, project)
+      .then(({ data }) => transformBackendObject(data) as Project)
       .catch((error) => {
         throw error;
       });

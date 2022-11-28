@@ -36,7 +36,7 @@ export const Projects = () => {
   };
 
   const handleSubmit = (values: Project | EmptyProject) => {
-    if (values.hasOwnProperty("id")) {
+    if ("id" in values) {
       updateProject.mutate(values as Project);
     } else {
       createProject.mutate(values as EmptyProject);
