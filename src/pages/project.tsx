@@ -74,29 +74,31 @@ export const Project = () => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
-        {cabinets?.map((cabinet) => {
-          return (
-            <Paper key={cabinet.id} sx={{ m: 1, p: 1 }}>
-              <Box display="flex" justifyContent="space-between">
-                <Box display="flex" alignItems="center">
-                  <Typography>{cabinet.name}</Typography>
-                  <Typography sx={{ ml: 1 }}>{cabinet.location}</Typography>
+        {cabinets
+          ?.filter(({ projectId: id }) => id === projectId)
+          .map((cabinet) => {
+            return (
+              <Paper key={cabinet.id} sx={{ m: 1, p: 1 }}>
+                <Box display="flex" justifyContent="space-between">
+                  <Box display="flex" alignItems="center">
+                    <Typography>{cabinet.name}</Typography>
+                    <Typography sx={{ ml: 1 }}>{cabinet.location}</Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <IconButton onClick={() => handleEdit(cabinet)}>
+                      <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(cabinet)}>
+                      <Delete />
+                    </IconButton>
+                    <IconButton component={Link} to={`/cabinets/${cabinet.id}`}>
+                      <ChevronRight />
+                    </IconButton>
+                  </Box>
                 </Box>
-                <Box display="flex" alignItems="center">
-                  <IconButton onClick={() => handleEdit(cabinet)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(cabinet)}>
-                    <Delete />
-                  </IconButton>
-                  <IconButton component={Link} to={`/cabinets/${cabinet.id}`}>
-                    <ChevronRight />
-                  </IconButton>
-                </Box>
-              </Box>
-            </Paper>
-          );
-        })}
+              </Paper>
+            );
+          })}
         <CabinetDialog
           open={open}
           cabinet={cabinet}
