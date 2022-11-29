@@ -41,12 +41,7 @@ export const useCreateDevice = () => {
   return useMutation({
     mutationFn: (device: Omit<Device, "id">) =>
       createDevice(device, axios.instance),
-    onMutate: (variables) => {
-      console.debug(variables);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(deviceKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(deviceKeys.all),
   });
 };
 
@@ -66,8 +61,6 @@ export const useDeleteDevice = () => {
 
   return useMutation({
     mutationFn: (device: Device) => deleteDevice(device, axios.instance),
-    onSuccess: () => {
-      queryClient.invalidateQueries(deviceKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(deviceKeys.all),
   });
 };

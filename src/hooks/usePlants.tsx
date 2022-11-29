@@ -41,12 +41,7 @@ export const useCreatePlant = () => {
   return useMutation({
     mutationFn: (plant: Omit<Plant, "id">) =>
       createPlant(plant, axios.instance),
-    onMutate: (variables) => {
-      console.debug(variables);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(plantKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(plantKeys.all),
   });
 };
 
@@ -66,8 +61,6 @@ export const useDeletePlant = () => {
 
   return useMutation({
     mutationFn: (plant: Plant) => deletePlant(plant, axios.instance),
-    onSuccess: () => {
-      queryClient.invalidateQueries(plantKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(plantKeys.all),
   });
 };

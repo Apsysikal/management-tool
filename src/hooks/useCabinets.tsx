@@ -41,12 +41,7 @@ export const useCreateCabinet = () => {
   return useMutation({
     mutationFn: (cabinet: Omit<Cabinet, "id">) =>
       createCabinet(cabinet, axios.instance),
-    onMutate: (variables) => {
-      console.debug(variables);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(cabinetKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(cabinetKeys.all),
   });
 };
 
@@ -66,8 +61,6 @@ export const useDeleteCabinet = () => {
 
   return useMutation({
     mutationFn: (cabinet: Cabinet) => deleteCabinet(cabinet, axios.instance),
-    onSuccess: () => {
-      queryClient.invalidateQueries(cabinetKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(cabinetKeys.all),
   });
 };

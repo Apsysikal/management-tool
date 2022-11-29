@@ -41,12 +41,7 @@ export const useCreateProject = () => {
   return useMutation({
     mutationFn: (project: Omit<Project, "id">) =>
       createProject(project, axios.instance),
-    onMutate: (variables) => {
-      console.debug(variables);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(projectKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(projectKeys.all),
   });
 };
 
@@ -56,9 +51,7 @@ export const useUpdateProject = () => {
 
   return useMutation({
     mutationFn: (project: Project) => updateProject(project, axios.instance),
-    onSuccess: () => {
-      queryClient.invalidateQueries(projectKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(projectKeys.all),
   });
 };
 
@@ -68,8 +61,6 @@ export const useDeleteProject = () => {
 
   return useMutation({
     mutationFn: (project: Project) => deleteProject(project, axios.instance),
-    onSuccess: () => {
-      queryClient.invalidateQueries(projectKeys.all);
-    },
+    onSuccess: () => queryClient.invalidateQueries(projectKeys.all),
   });
 };
