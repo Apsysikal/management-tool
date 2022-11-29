@@ -1,12 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useAxios } from "./useAxios";
-import { transformBackendObject } from "../utils";
-import { getProjects } from "../api/project";
+import {
+  getProjects,
+  getProjectById,
+  createProject,
+  updateProject,
+  deleteProject,
+} from "../api/project";
 
 // Types
-import { Project, ProjectResponse } from "../types/project";
+import { Project } from "../types/project";
 
-const projectKeys = {
+export const projectKeys = {
   all: ["projects"] as const,
   detail: (id: string) => [projectKeys.all, "detail", id] as const,
 };
@@ -16,26 +21,16 @@ export const useProjects = () => {
 
   return useQuery({
     queryKey: projectKeys.all,
-    queryFn: (queryKey) =>
-      getProjects({ queryKey: projectKeys.all, axios: axios.instance }),
+    queryFn: (context) => getProjects(context, axios.instance),
   });
 };
 
 export const useProjectDetails = (id: string) => {
   const axios = useAxios();
 
-  function getProjectById(id: string) {
-    return axios.instance
-      .get<ProjectResponse>(`/project/${id}`)
-      .then(({ data }) => transformBackendObject(data) as Project)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useQuery({
     queryKey: projectKeys.detail(id),
-    queryFn: () => getProjectById(id),
+    queryFn: (context) => getProjectById(context, axios.instance),
   });
 };
 
@@ -43,17 +38,9 @@ export const useCreateProject = () => {
   const queryClient = useQueryClient();
   const axios = useAxios();
 
-  function createProject(project: Omit<Project, "id">) {
-    return axios.instance
-      .post<ProjectResponse>("/project", project)
-      .then(({ data }) => transformBackendObject(data) as Project)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useMutation({
-    mutationFn: (project: Omit<Project, "id">) => createProject(project),
+    mutationFn: (project: Omit<Project, "id">) =>
+      createProject(project, axios.instance),
     onMutate: (variables) => {
       console.debug(variables);
     },
@@ -67,17 +54,8 @@ export const useUpdateProject = () => {
   const queryClient = useQueryClient();
   const axios = useAxios();
 
-  function modifyProject(project: Project) {
-    return axios.instance
-      .put<ProjectResponse>(`/${project.id}`, project)
-      .then(({ data }) => transformBackendObject(data) as Project)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useMutation({
-    mutationFn: (project: Project) => modifyProject(project),
+    mutationFn: (project: Project) => updateProject(project, axios.instance),
     onSuccess: () => {
       queryClient.invalidateQueries(projectKeys.all);
     },
@@ -88,17 +66,8 @@ export const useDeleteProject = () => {
   const queryClient = useQueryClient();
   const axios = useAxios();
 
-  function deleteProject(project: Project) {
-    return axios.instance
-      .delete<{ message: string }>(`/record/${project.id}`)
-      .then(({ data }) => data)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useMutation({
-    mutationFn: (project: Project) => deleteProject(project),
+    mutationFn: (project: Project) => deleteProject(project, axios.instance),
     onSuccess: () => {
       queryClient.invalidateQueries(projectKeys.all);
     },

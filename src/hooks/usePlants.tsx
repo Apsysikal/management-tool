@@ -1,9 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useAxios } from "./useAxios";
-import { Plant, PlantResponse } from "../types/plant";
-import { transformBackendObject } from "../utils";
+import {
+  getPlants,
+  getPlantById,
+  createPlant,
+  updatePlant,
+  deletePlant,
+} from "../api/plant";
 
-const plantKeys = {
+// Types
+import { Plant } from "../types/plant";
+
+export const plantKeys = {
   all: ["plants"] as const,
   detail: (id: string) => [plantKeys.all, "detail", id] as const,
 };
@@ -11,36 +19,18 @@ const plantKeys = {
 export const usePlants = () => {
   const axios = useAxios();
 
-  function getPlants() {
-    return axios.instance
-      .get<PlantResponse[]>("/plant")
-      .then(({ data }) => transformBackendObject(data) as Plant[])
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useQuery({
     queryKey: plantKeys.all,
-    queryFn: getPlants,
+    queryFn: (context) => getPlants(context, axios.instance),
   });
 };
 
 export const usePlantDetails = (id: string) => {
   const axios = useAxios();
 
-  function getPlantById(id: string) {
-    return axios.instance
-      .get<PlantResponse>(`/plant/${id}`)
-      .then(({ data }) => transformBackendObject(data) as Plant)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useQuery({
     queryKey: plantKeys.detail(id),
-    queryFn: () => getPlantById(id),
+    queryFn: (context) => getPlantById(context, axios.instance),
   });
 };
 
@@ -48,17 +38,9 @@ export const useCreatePlant = () => {
   const queryClient = useQueryClient();
   const axios = useAxios();
 
-  function createPlant(plant: Omit<Plant, "id">) {
-    return axios.instance
-      .post<PlantResponse>("/plant", plant)
-      .then(({ data }) => transformBackendObject(data) as Plant)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useMutation({
-    mutationFn: (plant: Omit<Plant, "id">) => createPlant(plant),
+    mutationFn: (plant: Omit<Plant, "id">) =>
+      createPlant(plant, axios.instance),
     onMutate: (variables) => {
       console.debug(variables);
     },
@@ -72,17 +54,8 @@ export const useUpdatePlant = () => {
   const queryClient = useQueryClient();
   const axios = useAxios();
 
-  function updatePlant(plant: Plant) {
-    return axios.instance
-      .put<PlantResponse>(`/plant/${plant.id}`, plant)
-      .then(({ data }) => transformBackendObject(data) as Plant)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useMutation({
-    mutationFn: (plant: Plant) => updatePlant(plant),
+    mutationFn: (plant: Plant) => updatePlant(plant, axios.instance),
     onSuccess: () => queryClient.invalidateQueries(plantKeys.all),
   });
 };
@@ -91,17 +64,8 @@ export const useDeletePlant = () => {
   const queryClient = useQueryClient();
   const axios = useAxios();
 
-  function deletePlant(plant: Plant) {
-    return axios.instance
-      .delete<{ message: string }>(`/record/${plant.id}`)
-      .then(({ data }) => data)
-      .catch((error) => {
-        throw error;
-      });
-  }
-
   return useMutation({
-    mutationFn: (plant: Plant) => deletePlant(plant),
+    mutationFn: (plant: Plant) => deletePlant(plant, axios.instance),
     onSuccess: () => {
       queryClient.invalidateQueries(plantKeys.all);
     },
