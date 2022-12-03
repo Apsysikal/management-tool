@@ -1,25 +1,20 @@
 import React from "react";
-import { Add, ChevronRight, Delete, Edit } from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  Container,
-  Fab,
-  IconButton,
-  Paper,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { AppBar, Container, Fab, Toolbar, Typography } from "@mui/material";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { PlantDialog } from "../components/PlantDialog";
+import { useParams } from "react-router-dom";
+
+import { PlantDialog } from "components/PlantDialog";
 import {
   usePlants,
   useCreatePlant,
   useUpdatePlant,
   useDeletePlant,
-} from "../hooks/usePlants";
-import { Plant, EmptyPlant } from "../types/plant";
+} from "hooks/usePlants";
+
+//Types
+import { Plant, EmptyPlant } from "types/plant";
+import { PlantAccordion } from "components/PlantAccordion";
 
 export const Cabinet = () => {
   const { cabinetId } = useParams();
@@ -78,25 +73,12 @@ export const Cabinet = () => {
           ?.filter(({ cabinetId: id }) => id === cabinetId)
           .map((plant) => {
             return (
-              <Paper key={plant.id} sx={{ m: 1, p: 1 }}>
-                <Box display="flex" justifyContent="space-between">
-                  <Box display="flex" alignItems="center">
-                    <Typography>{plant.shortDescription}</Typography>
-                    <Typography sx={{ ml: 1 }}>{plant.description}</Typography>
-                  </Box>
-                  <Box display="flex" alignItems="center">
-                    <IconButton onClick={() => handleEdit(plant)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(plant)}>
-                      <Delete />
-                    </IconButton>
-                    <IconButton component={Link} to={`/plants/${plant.id}`}>
-                      <ChevronRight />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Paper>
+              <PlantAccordion
+                key={plant.id}
+                plant={plant}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
             );
           })}
         <PlantDialog
