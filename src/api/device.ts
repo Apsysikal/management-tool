@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import { QueryFunctionContext } from "react-query";
+import { QueryFunctionContext } from "@tanstack/react-query";
 import { transformBackendObject } from "../utils";
 import { deviceKeys } from "../hooks/useDevices";
 

@@ -1,16 +1,60 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
 
-import { Projects } from "./pages/projects";
+import { RouterProvider } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import { RouteObject } from "react-router-dom";
+
+import { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import { createAxiosInstance } from "lib/axios";
+import { AxiosProvider } from "contexts/axios";
+
+import { CssBaseline } from "@mui/material";
+
+import { Projects, loader as projectsLoader } from "./pages/projects";
 import { Project } from "./pages/project";
 import { Cabinet } from "./pages/cabinet";
+import { ErrorPage } from "pages/ErrorPage";
+
+const queryClient = new QueryClient();
+const axios = createAxiosInstance();
+
+const routes: RouteObject[] = [
+  {
+    path: "/",
+    element: <Projects />,
+    loader: projectsLoader(queryClient, axios),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "project",
+    children: [
+      {
+        path: ":projectId",
+        element: <Project />,
+      },
+      {
+        path: ":projectId/:cabinetId",
+        element: <Cabinet />,
+      },
+    ],
+  },
+];
+
+const router = createBrowserRouter(routes);
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Projects />} />
-      <Route path="/projects/:projectId" element={<Project />} />
-      <Route path="/cabinets/:cabinetId" element={<Cabinet />} />
-    </Routes>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <AxiosProvider axios={axios}>
+          <CssBaseline />
+          <RouterProvider router={router} />
+          <ReactQueryDevtools position="bottom-left" />
+        </AxiosProvider>
+      </QueryClientProvider>
+    </>
   );
 }

@@ -20,6 +20,12 @@ import {
   useDeleteCabinet,
 } from "../hooks/useCabinets";
 import { Cabinet, EmptyCabinet } from "../types/cabinet";
+import { QueryClient } from "@tanstack/react-query";
+import { AxiosInstance } from "axios";
+
+export const loader = ({ params }) => {
+  const;
+};
 
 export const Project = () => {
   const { projectId } = useParams();
@@ -91,7 +97,7 @@ export const Project = () => {
                     <IconButton onClick={() => handleDelete(cabinet)}>
                       <Delete />
                     </IconButton>
-                    <IconButton component={Link} to={`/cabinets/${cabinet.id}`}>
+                    <IconButton component={Link} to={`${cabinet.id}`}>
                       <ChevronRight />
                     </IconButton>
                   </Box>

@@ -19,6 +19,15 @@ import {
   useDeleteProject,
 } from "../hooks/useProjects";
 import { Project, EmptyProject } from "../types/project";
+import { QueryClient } from "@tanstack/react-query";
+import { AxiosInstance } from "axios";
+import { getAllProjectsQuery } from "queries/project";
+
+export const loader = (qc: QueryClient, axios: AxiosInstance) => async () => {
+  const query = getAllProjectsQuery(axios);
+
+  return qc.getQueryData(query.queryKey) ?? (await qc.fetchQuery(query));
+};
 
 export const Projects = () => {
   const { data: projects } = useProjects();
@@ -76,7 +85,7 @@ export const Projects = () => {
                   <IconButton onClick={() => handleDelete(project)}>
                     <Delete />
                   </IconButton>
-                  <IconButton component={Link} to={`/projects/${project.id}`}>
+                  <IconButton component={Link} to={`/project/${project.id}`}>
                     <ChevronRight />
                   </IconButton>
                 </Box>

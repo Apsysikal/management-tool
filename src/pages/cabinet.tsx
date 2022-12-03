@@ -15,6 +15,7 @@ import {
 //Types
 import { Plant, EmptyPlant } from "types/plant";
 import { PlantAccordion } from "components/PlantAccordion";
+import { Breadcrums } from "components/Breadcrumbs";
 
 export const Cabinet = () => {
   const { cabinetId } = useParams();
@@ -69,6 +70,7 @@ export const Cabinet = () => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
+        <Breadcrums />
         {plants
           ?.filter(({ cabinetId: id }) => id === cabinetId)
           .map((plant) => {

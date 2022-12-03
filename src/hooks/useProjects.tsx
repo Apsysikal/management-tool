@@ -1,12 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAxios } from "./useAxios";
-import {
-  getProjects,
-  getProjectById,
-  createProject,
-  updateProject,
-  deleteProject,
-} from "../api/project";
+import { createProject, updateProject, deleteProject } from "../api/project";
+
+import { getAllProjectsQuery } from "queries/project";
+import { getProjectDetailsQuery } from "queries/project";
 
 // Types
 import { Project } from "../types/project";
@@ -19,19 +16,13 @@ export const projectKeys = {
 export const useProjects = () => {
   const axios = useAxios();
 
-  return useQuery({
-    queryKey: projectKeys.all,
-    queryFn: (context) => getProjects(context, axios.instance),
-  });
+  return useQuery(getAllProjectsQuery(axios.instance));
 };
 
 export const useProjectDetails = (id: string) => {
   const axios = useAxios();
 
-  return useQuery({
-    queryKey: projectKeys.detail(id),
-    queryFn: (context) => getProjectById(context, axios.instance),
-  });
+  return useQuery(getProjectDetailsQuery(axios.instance, id));
 };
 
 export const useCreateProject = () => {
