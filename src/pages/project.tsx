@@ -1,17 +1,18 @@
 import React from "react";
-import { Add, ChevronRight, Delete, Edit } from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  Container,
-  Fab,
-  IconButton,
-  Paper,
-  Toolbar,
-  Typography,
-} from "@mui/material";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+
+import { Toolbar } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+
+import { Add } from "@mui/icons-material";
+
+import { Outlet } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import { CabinetDialog } from "../components/CabinetDialog";
 import {
   useCabinets,
@@ -19,15 +20,14 @@ import {
   useUpdateCabinet,
   useDeleteCabinet,
 } from "../hooks/useCabinets";
-import { Cabinet, EmptyCabinet } from "../types/cabinet";
+import { Cabinet as CabinetType, EmptyCabinet } from "../types/cabinet";
 import { QueryClient } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 
-export const loader = ({ params }) => {
-  const;
-};
+import { Cabinet } from "components/Cabinet";
 
 export const Project = () => {
+  const location = useLocation();
   const { projectId } = useParams();
   const { data: cabinets } = useCabinets();
   const createCabinet = useCreateCabinet();
@@ -36,11 +36,19 @@ export const Project = () => {
 
   // Dialog
   const [open, setOpen] = useState(false);
-  const [cabinet, setCabinet] = useState<Cabinet | EmptyCabinet>({
+  const [cabinet, setCabinet] = useState<CabinetType | EmptyCabinet>({
     projectId: projectId || "",
     name: "",
     location: "",
   });
+
+  useEffect(() => {
+    setCabinet({
+      projectId: projectId || "",
+      name: "",
+      location: "",
+    });
+  }, [projectId]);
 
   if (!projectId) return null;
 
@@ -53,7 +61,7 @@ export const Project = () => {
     });
   };
 
-  const handleSubmit = (values: Cabinet | EmptyCabinet) => {
+  const handleSubmit = (values: CabinetType | EmptyCabinet) => {
     if ("id" in values) {
       updateCabinet.mutate(values);
     } else {
@@ -63,46 +71,37 @@ export const Project = () => {
     handleClose();
   };
 
-  const handleEdit = (values: Cabinet) => {
+  const handleEdit = (values: CabinetType) => {
     setCabinet(values);
     setOpen(true);
   };
 
-  const handleDelete = (values: Cabinet) => {
+  const handleDelete = (values: CabinetType) => {
     deleteCabinet.mutate(values);
   };
 
   return (
-    <>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Typography variant="h6">Projects</Typography>
+    <Grid container spacing={1}>
+      <Grid item xs={4}>
+        <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
+          <Typography flexGrow={1}>Cabinets</Typography>
+          <IconButton onClick={() => setOpen(true)}>
+            <Add />
+          </IconButton>
         </Toolbar>
-      </AppBar>
-      <Container maxWidth="lg">
         {cabinets
           ?.filter(({ projectId: id }) => id === projectId)
           .map((cabinet) => {
+            const activeCabinet = location.pathname.includes(cabinet.id);
+
             return (
-              <Paper key={cabinet.id} sx={{ m: 1, p: 1 }}>
-                <Box display="flex" justifyContent="space-between">
-                  <Box display="flex" alignItems="center">
-                    <Typography>{cabinet.name}</Typography>
-                    <Typography sx={{ ml: 1 }}>{cabinet.location}</Typography>
-                  </Box>
-                  <Box display="flex" alignItems="center">
-                    <IconButton onClick={() => handleEdit(cabinet)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(cabinet)}>
-                      <Delete />
-                    </IconButton>
-                    <IconButton component={Link} to={`${cabinet.id}`}>
-                      <ChevronRight />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Paper>
+              <Cabinet
+                key={cabinet.id}
+                cabinet={cabinet}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                sx={{ m: 1, p: 1, color: activeCabinet ? "primary.main" : "" }}
+              />
             );
           })}
         <CabinetDialog
@@ -111,18 +110,10 @@ export const Project = () => {
           handleClose={handleClose}
           handleSubmit={handleSubmit}
         />
-        <Fab
-          color="primary"
-          onClick={() => setOpen(true)}
-          sx={{
-            position: "absolute",
-            bottom: 16,
-            right: 16,
-          }}
-        >
-          <Add />
-        </Fab>
-      </Container>
-    </>
+      </Grid>
+      <Grid item xs={8}>
+        <Outlet />
+      </Grid>
+    </Grid>
   );
 };

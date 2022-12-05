@@ -1,24 +1,27 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Box,
-  Container,
-  Fab,
-  IconButton,
-  Paper,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { Add, Edit, Delete, ChevronRight } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+
+import { AppBar, Container, Fab, IconButton, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import { Toolbar } from "@mui/material";
+
+import { Add } from "@mui/icons-material";
+
 import { ProjectDialog } from "../components/ProjectDialog";
+
+import { Outlet } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import {
   useProjects,
   useCreateProject,
   useUpdateProject,
   useDeleteProject,
 } from "../hooks/useProjects";
-import { Project, EmptyProject } from "../types/project";
+
+import { Project } from "components/Project";
+
+import { Project as ProjectType, EmptyProject } from "../types/project";
+
 import { QueryClient } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 import { getAllProjectsQuery } from "queries/project";
@@ -30,6 +33,7 @@ export const loader = (qc: QueryClient, axios: AxiosInstance) => async () => {
 };
 
 export const Projects = () => {
+  const location = useLocation();
   const { data: projects } = useProjects();
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
@@ -37,16 +41,18 @@ export const Projects = () => {
 
   // Dialog
   const [open, setOpen] = useState(false);
-  const [project, setProject] = useState<Project | EmptyProject>({ title: "" });
+  const [project, setProject] = useState<ProjectType | EmptyProject>({
+    title: "",
+  });
 
   const handleClose = () => {
     setOpen(false);
     setProject({ title: "" });
   };
 
-  const handleSubmit = (values: Project | EmptyProject) => {
+  const handleSubmit = (values: ProjectType | EmptyProject) => {
     if ("id" in values) {
-      updateProject.mutate(values as Project);
+      updateProject.mutate(values as ProjectType);
     } else {
       createProject.mutate(values as EmptyProject);
     }
@@ -54,12 +60,12 @@ export const Projects = () => {
     handleClose();
   };
 
-  const handleEdit = (values: Project) => {
+  const handleEdit = (values: ProjectType) => {
     setProject(values);
     setOpen(true);
   };
 
-  const handleDelete = (values: Project) => {
+  const handleDelete = (values: ProjectType) => {
     deleteProject.mutate(values);
   };
 
@@ -71,45 +77,42 @@ export const Projects = () => {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg">
-        {projects?.map((project) => {
-          return (
-            <Paper key={project.id} sx={{ m: 1, p: 1 }}>
-              <Box display="flex" justifyContent="space-between">
-                <Box display="flex" alignItems="center">
-                  <Typography>{project.title}</Typography>
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <IconButton onClick={() => handleEdit(project)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(project)}>
-                    <Delete />
-                  </IconButton>
-                  <IconButton component={Link} to={`/project/${project.id}`}>
-                    <ChevronRight />
-                  </IconButton>
-                </Box>
-              </Box>
-            </Paper>
-          );
-        })}
-        <ProjectDialog
-          open={open}
-          project={project}
-          handleClose={handleClose}
-          handleSubmit={handleSubmit}
-        />
-        <Fab
-          color="primary"
-          onClick={() => setOpen(true)}
-          sx={{
-            position: "absolute",
-            bottom: 16,
-            right: 16,
-          }}
-        >
-          <Add />
-        </Fab>
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
+              <Typography flexGrow={1}>Projects</Typography>
+              <IconButton onClick={() => setOpen(true)}>
+                <Add />
+              </IconButton>
+            </Toolbar>
+            {projects?.map((project) => {
+              const activeProject = location.pathname.includes(project.id);
+
+              return (
+                <Project
+                  key={project.id}
+                  project={project}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                  sx={{
+                    m: 1,
+                    p: 1,
+                    color: activeProject ? "primary.main" : "",
+                  }}
+                />
+              );
+            })}
+            <ProjectDialog
+              open={open}
+              project={project}
+              handleClose={handleClose}
+              handleSubmit={handleSubmit}
+            />
+          </Grid>
+          <Grid item xs={9}>
+            <Outlet />
+          </Grid>
+        </Grid>
       </Container>
     </>
   );

@@ -11,6 +11,8 @@ export const queryKeys = {
 };
 
 type ProjectDetailQueryKey = ReturnType<typeof queryKeys["detail"]>;
+type ProjectDetailQueryFunctionContext =
+  QueryFunctionContext<ProjectDetailQueryKey>;
 
 export const getAllProjectsQuery = (axios: AxiosInstance) => ({
   queryKey: queryKeys.all,
@@ -19,6 +21,6 @@ export const getAllProjectsQuery = (axios: AxiosInstance) => ({
 
 export const getProjectDetailsQuery = (axios: AxiosInstance, id: string) => ({
   queryKey: queryKeys.detail(id),
-  queryFn: (context: QueryFunctionContext<ProjectDetailQueryKey>) =>
+  queryFn: (context: ProjectDetailQueryFunctionContext) =>
     getProjectById(context, axios),
 });

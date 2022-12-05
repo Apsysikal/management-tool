@@ -27,17 +27,16 @@ const routes: RouteObject[] = [
     element: <Projects />,
     loader: projectsLoader(queryClient, axios),
     errorElement: <ErrorPage />,
-  },
-  {
-    path: "project",
     children: [
       {
         path: ":projectId",
         element: <Project />,
-      },
-      {
-        path: ":projectId/:cabinetId",
-        element: <Cabinet />,
+        children: [
+          {
+            path: ":cabinetId",
+            element: <Cabinet />,
+          },
+        ],
       },
     ],
   },

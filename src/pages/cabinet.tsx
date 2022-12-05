@@ -1,7 +1,13 @@
 import React from "react";
-import { Add } from "@mui/icons-material";
-import { AppBar, Container, Fab, Toolbar, Typography } from "@mui/material";
 import { useState } from "react";
+
+import { Fab } from "@mui/material";
+import { Toolbar } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Typography } from "@mui/material";
+
+import { Add } from "@mui/icons-material";
+
 import { useParams } from "react-router-dom";
 
 import { PlantDialog } from "components/PlantDialog";
@@ -15,7 +21,6 @@ import {
 //Types
 import { Plant, EmptyPlant } from "types/plant";
 import { PlantAccordion } from "components/PlantAccordion";
-import { Breadcrums } from "components/Breadcrumbs";
 
 export const Cabinet = () => {
   const { cabinetId } = useParams();
@@ -64,43 +69,41 @@ export const Cabinet = () => {
 
   return (
     <>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Typography variant="h6">{`Cabinet`}</Typography>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="lg">
-        <Breadcrums />
-        {plants
-          ?.filter(({ cabinetId: id }) => id === cabinetId)
-          .map((plant) => {
-            return (
-              <PlantAccordion
-                key={plant.id}
-                plant={plant}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-              />
-            );
-          })}
-        <PlantDialog
-          open={open}
-          plant={plant}
-          handleClose={handleClose}
-          handleSubmit={handleSubmit}
-        />
-        <Fab
-          color="primary"
-          onClick={() => setOpen(true)}
-          sx={{
-            position: "absolute",
-            bottom: 16,
-            right: 16,
-          }}
-        >
+      <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
+        <Typography flexGrow={1}>Plants</Typography>
+        <IconButton onClick={() => setOpen(true)}>
           <Add />
-        </Fab>
-      </Container>
+        </IconButton>
+      </Toolbar>
+      {plants
+        ?.filter(({ cabinetId: id }) => id === cabinetId)
+        .map((plant) => {
+          return (
+            <PlantAccordion
+              key={plant.id}
+              plant={plant}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+          );
+        })}
+      <PlantDialog
+        open={open}
+        plant={plant}
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+      />
+      <Fab
+        color="primary"
+        onClick={() => setOpen(true)}
+        sx={{
+          position: "absolute",
+          bottom: 16,
+          right: 16,
+        }}
+      >
+        <Add />
+      </Fab>
     </>
   );
 };

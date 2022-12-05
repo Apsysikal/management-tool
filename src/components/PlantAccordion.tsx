@@ -91,10 +91,14 @@ export const PlantAccordion = ({
     <>
       <Accordion expanded={expand}>
         <AccordionSummary sx={{ pointerEvents: "none" }}>
-          <Box flexGrow={1} alignItems="center">
+          <Box display="flex" flexGrow={1} alignItems="center">
             <Typography>{`${plant.shortDescription} ${plant.description}`}</Typography>
           </Box>
-          <Box sx={{ pointerEvents: "auto" }}>
+          <Box
+            display="flex"
+            alignItems="center"
+            sx={{ pointerEvents: "auto" }}
+          >
             <IconButton onClick={() => handleEdit(plant)}>
               <Edit />
             </IconButton>
