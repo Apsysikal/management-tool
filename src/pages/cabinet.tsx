@@ -5,8 +5,13 @@ import { Toolbar } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
+import { ToggleButton } from "@mui/material";
+import { ToggleButtonGroup } from "@mui/material";
 
 import { Add } from "@mui/icons-material";
+import { UnfoldLess } from "@mui/icons-material";
+import { UnfoldMore } from "@mui/icons-material";
 
 import { useParams } from "react-router-dom";
 
@@ -28,6 +33,13 @@ export const Cabinet = () => {
   const createPlant = useCreatePlant();
   const updatePlant = useUpdatePlant();
   const deletePlant = useDeletePlant();
+
+  // Device Display
+  const [density, setDensity] = useState<"compact" | "normal">("normal");
+  const changeDensity = (value: string | null) => {
+    if (value === "compact") return setDensity("compact");
+    return setDensity("normal");
+  };
 
   // Dialog
   const [open, setOpen] = useState(false);
@@ -71,9 +83,24 @@ export const Cabinet = () => {
     <>
       <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
         <Typography flexGrow={1}>Plants</Typography>
-        <IconButton onClick={() => setOpen(true)}>
-          <Add />
-        </IconButton>
+        <Stack direction="row" spacing={2}>
+          <ToggleButtonGroup
+            exclusive
+            size="small"
+            value={density}
+            onChange={(_, value) => changeDensity(value)}
+          >
+            <ToggleButton value="compact">
+              <UnfoldLess />
+            </ToggleButton>
+            <ToggleButton value="normal">
+              <UnfoldMore />
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <IconButton onClick={() => setOpen(true)}>
+            <Add />
+          </IconButton>
+        </Stack>
       </Toolbar>
       <Box>
         {plants
@@ -83,6 +110,7 @@ export const Cabinet = () => {
               <Plant
                 key={plant.id}
                 plant={plant}
+                deviceView={density}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
               />

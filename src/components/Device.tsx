@@ -200,7 +200,7 @@ export const Device = ({
 }) => {
   return (
     <>
-      <Paper sx={{ p: 2, mb: 1 }}>
+      <Paper elevation={0} sx={{ pt: 1, mb: 1 }}>
         {view === "normal" && (
           <NormalDevice
             device={device}

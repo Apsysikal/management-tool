@@ -26,6 +26,7 @@ const routes: RouteObject[] = [
   {
     path: "/",
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -36,10 +37,12 @@ const routes: RouteObject[] = [
           {
             path: ":projectId",
             element: <Project />,
+            errorElement: <ErrorPage />,
             children: [
               {
                 path: ":cabinetId",
                 element: <Cabinet />,
+                errorElement: <ErrorPage />,
               },
             ],
           },

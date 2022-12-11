@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { AppBar, Container, IconButton, Typography } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Toolbar } from "@mui/material";
 
@@ -72,7 +72,7 @@ export const Projects = () => {
   return (
     <>
       <Grid container spacing={1}>
-        <Grid item xs={3}>
+        <Grid item xs={12} lg={3}>
           <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
             <Typography flexGrow={1}>Projects</Typography>
             <IconButton onClick={() => setOpen(true)}>
@@ -103,7 +103,7 @@ export const Projects = () => {
             handleSubmit={handleSubmit}
           />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={12} lg={9}>
           <Outlet />
         </Grid>
       </Grid>

@@ -23,11 +23,17 @@ import { Device as DeviceType, EmptyDevice } from "types/device";
 
 type PlantProps = {
   plant: PlantType;
+  deviceView: "normal" | "compact";
   handleEdit: (plant: PlantType) => void;
   handleDelete: (plant: PlantType) => void;
 };
 
-export const Plant = ({ plant, handleEdit, handleDelete }: PlantProps) => {
+export const Plant = ({
+  plant,
+  deviceView,
+  handleEdit,
+  handleDelete,
+}: PlantProps) => {
   const { data: devices } = useDevices();
   const createDevice = useCreateDevice();
   const updateDevice = useUpdateDevice();
@@ -106,14 +112,14 @@ export const Plant = ({ plant, handleEdit, handleDelete }: PlantProps) => {
             </Stack>
           </Box>
         </Stack>
-        <Collapse in={expand}>
+        <Collapse in={expand} sx={{ mt: expand ? 1 : 0 }}>
           {devices
             ?.filter(({ plantId }) => plantId === plant.id)
             .map((device) => {
               return (
                 <Device
                   key={device.id}
-                  view="normal"
+                  view={deviceView}
                   device={device}
                   handleEdit={handleDeviceEdit}
                   handleDelete={handleDeviceDelete}

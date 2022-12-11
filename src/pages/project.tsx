@@ -80,7 +80,7 @@ export const Project = () => {
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={4}>
+      <Grid item xs={12} lg={4}>
         <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
           <Typography flexGrow={1}>Cabinets</Typography>
           <IconButton onClick={() => setOpen(true)}>
@@ -109,7 +109,7 @@ export const Project = () => {
           handleSubmit={handleSubmit}
         />
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={12} lg={8}>
         <Outlet />
       </Grid>
     </Grid>
