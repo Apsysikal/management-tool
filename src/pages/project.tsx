@@ -21,8 +21,6 @@ import {
   useDeleteCabinet,
 } from "../hooks/useCabinets";
 import { Cabinet as CabinetType, EmptyCabinet } from "../types/cabinet";
-import { QueryClient } from "@tanstack/react-query";
-import { AxiosInstance } from "axios";
 
 import { Cabinet } from "components/Cabinet";
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 
-import { Fab } from "@mui/material";
 import { Toolbar } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { Add } from "@mui/icons-material";
 
@@ -19,8 +19,8 @@ import {
 } from "hooks/usePlants";
 
 //Types
-import { Plant, EmptyPlant } from "types/plant";
-import { PlantAccordion } from "components/PlantAccordion";
+import { Plant as PlantType, EmptyPlant } from "types/plant";
+import { Plant } from "components/Plant";
 
 export const Cabinet = () => {
   const { cabinetId } = useParams();
@@ -31,7 +31,7 @@ export const Cabinet = () => {
 
   // Dialog
   const [open, setOpen] = useState(false);
-  const [plant, setPlant] = useState<Plant | EmptyPlant>({
+  const [plant, setPlant] = useState<PlantType | EmptyPlant>({
     cabinetId: cabinetId || "",
     shortDescription: "",
     description: "",
@@ -48,7 +48,7 @@ export const Cabinet = () => {
     });
   };
 
-  const handleSubmit = (values: Plant | EmptyPlant) => {
+  const handleSubmit = (values: PlantType | EmptyPlant) => {
     if ("id" in values) {
       updatePlant.mutate(values);
     } else {
@@ -58,12 +58,12 @@ export const Cabinet = () => {
     handleClose();
   };
 
-  const handleEdit = (values: Plant) => {
+  const handleEdit = (values: PlantType) => {
     setPlant(values);
     setOpen(true);
   };
 
-  const handleDelete = (values: Plant) => {
+  const handleDelete = (values: PlantType) => {
     deletePlant.mutate(values);
   };
 
@@ -75,35 +75,26 @@ export const Cabinet = () => {
           <Add />
         </IconButton>
       </Toolbar>
-      {plants
-        ?.filter(({ cabinetId: id }) => id === cabinetId)
-        .map((plant) => {
-          return (
-            <PlantAccordion
-              key={plant.id}
-              plant={plant}
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
-          );
-        })}
+      <Box>
+        {plants
+          ?.filter(({ cabinetId: id }) => id === cabinetId)
+          .map((plant) => {
+            return (
+              <Plant
+                key={plant.id}
+                plant={plant}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            );
+          })}
+      </Box>
       <PlantDialog
         open={open}
         plant={plant}
         handleClose={handleClose}
         handleSubmit={handleSubmit}
       />
-      <Fab
-        color="primary"
-        onClick={() => setOpen(true)}
-        sx={{
-          position: "absolute",
-          bottom: 16,
-          right: 16,
-        }}
-      >
-        <Add />
-      </Fab>
     </>
   );
 };

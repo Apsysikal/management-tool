@@ -32,7 +32,7 @@ export const Project = ({
     <Paper sx={sx}>
       <Box display="flex" justifyContent="space-between">
         <Box display="flex" alignItems="center" width={1 / 2}>
-          <Typography width={1} overflow="clip" textOverflow="ellipsis">
+          <Typography width={1} noWrap overflow="clip" textOverflow="ellipsis">
             {project.title}
           </Typography>
         </Box>

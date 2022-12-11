@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { AppBar, Container, Fab, IconButton, Typography } from "@mui/material";
+import { AppBar, Container, IconButton, Typography } from "@mui/material";
 import { Grid } from "@mui/material";
 import { Toolbar } from "@mui/material";
 
@@ -71,49 +71,42 @@ export const Projects = () => {
 
   return (
     <>
-      <AppBar position="sticky">
-        <Toolbar>
-          <Typography variant="h6">Projects</Typography>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="lg">
-        <Grid container spacing={1}>
-          <Grid item xs={3}>
-            <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
-              <Typography flexGrow={1}>Projects</Typography>
-              <IconButton onClick={() => setOpen(true)}>
-                <Add />
-              </IconButton>
-            </Toolbar>
-            {projects?.map((project) => {
-              const activeProject = location.pathname.includes(project.id);
+      <Grid container spacing={1}>
+        <Grid item xs={3}>
+          <Toolbar disableGutters sx={{ m: 1, p: 1 }}>
+            <Typography flexGrow={1}>Projects</Typography>
+            <IconButton onClick={() => setOpen(true)}>
+              <Add />
+            </IconButton>
+          </Toolbar>
+          {projects?.map((project) => {
+            const activeProject = location.pathname.includes(project.id);
 
-              return (
-                <Project
-                  key={project.id}
-                  project={project}
-                  handleEdit={handleEdit}
-                  handleDelete={handleDelete}
-                  sx={{
-                    m: 1,
-                    p: 1,
-                    color: activeProject ? "primary.main" : "",
-                  }}
-                />
-              );
-            })}
-            <ProjectDialog
-              open={open}
-              project={project}
-              handleClose={handleClose}
-              handleSubmit={handleSubmit}
-            />
-          </Grid>
-          <Grid item xs={9}>
-            <Outlet />
-          </Grid>
+            return (
+              <Project
+                key={project.id}
+                project={project}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                sx={{
+                  m: 1,
+                  p: 1,
+                  color: activeProject ? "primary.main" : "",
+                }}
+              />
+            );
+          })}
+          <ProjectDialog
+            open={open}
+            project={project}
+            handleClose={handleClose}
+            handleSubmit={handleSubmit}
+          />
         </Grid>
-      </Container>
+        <Grid item xs={9}>
+          <Outlet />
+        </Grid>
+      </Grid>
     </>
   );
 };

@@ -13,6 +13,7 @@ import { AxiosProvider } from "contexts/axios";
 
 import { CssBaseline } from "@mui/material";
 
+import { Layout } from "./pages/Layout";
 import { Projects, loader as projectsLoader } from "./pages/projects";
 import { Project } from "./pages/project";
 import { Cabinet } from "./pages/cabinet";
@@ -24,17 +25,23 @@ const axios = createAxiosInstance();
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <Projects />,
-    loader: projectsLoader(queryClient, axios),
-    errorElement: <ErrorPage />,
+    element: <Layout />,
     children: [
       {
-        path: ":projectId",
-        element: <Project />,
+        path: "/",
+        element: <Projects />,
+        loader: projectsLoader(queryClient, axios),
+        errorElement: <ErrorPage />,
         children: [
           {
-            path: ":cabinetId",
-            element: <Cabinet />,
+            path: ":projectId",
+            element: <Project />,
+            children: [
+              {
+                path: ":cabinetId",
+                element: <Cabinet />,
+              },
+            ],
           },
         ],
       },

@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  Box,
-  IconButton,
-  AccordionActions,
-  Button,
-} from "@mui/material";
+
+import { Paper } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Box } from "@mui/material";
+import { Typography } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Collapse } from "@mui/material";
+import { Button } from "@mui/material";
+
 import { Delete, Edit, ExpandMore, ExpandLess } from "@mui/icons-material";
 
 import { useDevices } from "hooks/useDevices";
@@ -22,17 +21,13 @@ import { DeviceDialog, emptyDevice } from "components/DeviceDialog";
 import { Plant as PlantType } from "types/plant";
 import { Device as DeviceType, EmptyDevice } from "types/device";
 
-type PlantAccordionProps = {
+type PlantProps = {
   plant: PlantType;
   handleEdit: (plant: PlantType) => void;
   handleDelete: (plant: PlantType) => void;
 };
 
-export const PlantAccordion = ({
-  plant,
-  handleEdit,
-  handleDelete,
-}: PlantAccordionProps) => {
+export const Plant = ({ plant, handleEdit, handleDelete }: PlantProps) => {
   const { data: devices } = useDevices();
   const createDevice = useCreateDevice();
   const updateDevice = useUpdateDevice();
@@ -89,28 +84,29 @@ export const PlantAccordion = ({
 
   return (
     <>
-      <Accordion expanded={expand}>
-        <AccordionSummary sx={{ pointerEvents: "none" }}>
-          <Box display="flex" flexGrow={1} alignItems="center">
-            <Typography>{`${plant.shortDescription} ${plant.description}`}</Typography>
+      <Paper sx={{ m: 1, p: 1 }}>
+        <Stack direction="row">
+          <Box display="flex" flexGrow={1}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography>{plant.shortDescription}</Typography>
+              <Typography>{plant.description}</Typography>
+            </Stack>
           </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            sx={{ pointerEvents: "auto" }}
-          >
-            <IconButton onClick={() => handleEdit(plant)}>
-              <Edit />
-            </IconButton>
-            <IconButton onClick={() => handleDelete(plant)}>
-              <Delete />
-            </IconButton>
-            <IconButton onClick={toggleExpand}>
-              {expand ? <ExpandLess /> : <ExpandMore />}
-            </IconButton>
+          <Box>
+            <Stack direction="row">
+              <IconButton onClick={() => handleEdit(plant)}>
+                <Edit />
+              </IconButton>
+              <IconButton onClick={() => handleDelete(plant)}>
+                <Delete />
+              </IconButton>
+              <IconButton onClick={() => toggleExpand()}>
+                {expand ? <ExpandLess /> : <ExpandMore />}
+              </IconButton>
+            </Stack>
           </Box>
-        </AccordionSummary>
-        <AccordionDetails>
+        </Stack>
+        <Collapse in={expand}>
           {devices
             ?.filter(({ plantId }) => plantId === plant.id)
             .map((device) => {
@@ -124,11 +120,11 @@ export const PlantAccordion = ({
                 />
               );
             })}
-        </AccordionDetails>
-        <AccordionActions>
-          <Button onClick={() => setOpen(true)}>Add Device</Button>
-        </AccordionActions>
-      </Accordion>
+          <Box display="flex" justifyContent="flex-end">
+            <Button onClick={() => setOpen(true)}>Add Device</Button>
+          </Box>
+        </Collapse>
+      </Paper>
       <DeviceDialog
         open={open}
         device={dialogDevice}
